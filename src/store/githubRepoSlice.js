@@ -25,7 +25,7 @@ export const fetchGithubRepos = createAsyncThunk(
     async (page = 1, { rejectWithValue }) => {
         try {
             const res = await fetch(
-                `${baseUrl}/search/repositories?q=created:>2017-10-22&sort=stars&order=desc&page=${page}&per_page=10`
+                `${baseUrl}/search/repositories?q=created:>2017-10-22&sort=stars&order=desc&page=${page}&per_page=5`
             );
             const data = await res.json();
             if (data?.items) {
@@ -50,7 +50,6 @@ const githubRepoSlice = createSlice({
             total_count: 0,
             items: [],
         },
-        // currentPage: 1,
         status: STATUSES.IDLE,
     },
     extraReducers: (builder) => {
@@ -65,10 +64,6 @@ const githubRepoSlice = createSlice({
                     },
                     status: STATUSES?.COMPLETED,
                 };
-                // state.data.items = action.payload.items;
-                // state.data.total_count = action.payload.total_count;
-                // state.status = STATUSES.IDLE;
-                // state.currentPage++;
             })
             .addCase(fetchGithubRepos.rejected, (state, action) => {
                 state.status = STATUSES.ERROR;

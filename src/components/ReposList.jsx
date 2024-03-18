@@ -1,29 +1,41 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { STATUSES, fetchGithubRepos } from "../store/githubRepoSlice";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-// import Typography from "@mui/material/Typography";
 import ArrowDropForwardIcon from "@mui/icons-material/ArrowForwardIos";
+import ActivityChart from "./ActivityChart";
+import ContributorChangesChart from "./ContributorChart ";
 import "./RepoList.css";
-// import InfiniteScroll from "react-infinite-scroll-component";
-import { useDispatch, useSelector } from "react-redux";
-import { STATUSES, fetchGithubRepos } from "../store/githubRepoSlice";
-import Graph from "./Graph";
 
 const ReposList = () => {
     const dispatch = useDispatch();
+
+    const [expanded, setExpanded] = useState(null);
+
     const { data: githubRepos, status } = useSelector(
         (state) => state.githubRepos
     );
     const [currentPage, setCurrentPage] = useState(1);
     const statusRef = useRef(null);
+
     useEffect(() => {
         statusRef.current = status;
     }, [status]);
+
     useEffect(() => {
         loadMoreData();
     }, []);
+
+    useEffect(() => {
+        window.addEventListener("scroll", handleScroll);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
     const handleScroll = () => {
         if (
             window.innerHeight + window.scrollY >= document.body.offsetHeight &&
@@ -38,16 +50,18 @@ const ReposList = () => {
         setCurrentPage((prev) => prev + 1);
     };
 
-    useEffect(() => {
-        window.addEventListener("scroll", handleScroll);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
+    const handleChange = (index) => (event, isExpanded) => {
+        setExpanded(isExpanded ? index : null);
+    };
+
     return (
         <>
             {githubRepos?.items?.map((item, index) => (
-                <Accordion key={index}>
+                <Accordion
+                    key={index}
+                    expanded={expanded === index}
+                    onChange={handleChange(index)}
+                >
                     <AccordionSummary
                         expandIcon={<ArrowDropForwardIcon />}
                         aria-controls={`panel-${item.id}-content`}
@@ -60,6 +74,7 @@ const ReposList = () => {
                                 alt=""
                             />{" "}
                             <div>
+                                {index}
                                 <h2>{item.name}</h2>
                                 <p>{item.description}</p>
                                 <div className="d-flex gap-3 align-items-baseline">
@@ -81,7 +96,19 @@ const ReposList = () => {
                         </div>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Details owner={item.owner.login} repo={item.name} />
+                        {expanded === index && (
+                            <ActivityChart
+                                owner={item.owner.login}
+                                repo={item.name}
+                            />
+                        )}
+
+                        {expanded === index && (
+                            <ContributorChangesChart
+                                owner={item.owner.login}
+                                repo={item.name}
+                            />
+                        )}
                     </AccordionDetails>
                 </Accordion>
             ))}
@@ -94,39 +121,3 @@ const ReposList = () => {
 };
 
 export default ReposList;
-
-const Details = ({ owner, repo }) => {
-    const [value, setValue] = useState("");
-    console.log(value);
-    return (
-        <>
-            <div style={{ display: "flex", justifyContent: "right" }}>
-                <select
-                    value={value}
-                    onChange={(e) => {
-                        setValue(e.target.value);
-                    }}
-                >
-                    <option disabled value="">
-                        select
-                    </option>
-                    <option value="commits">Commit</option>
-                    <option value="additions">Additions</option>
-                    <option value="deletions">Deletion</option>
-                </select>
-            </div>
-            <Graph
-                name={"Total Changes"}
-                activity={value}
-                owner={owner}
-                repo={repo}
-            />
-            <Graph
-                name={"Contributor Changes"}
-                activity={value}
-                owner={owner}
-                repo={repo}
-            />
-        </>
-    );
-};

@@ -5,18 +5,42 @@ export const fetchRepositoryStats = createAsyncThunk(
     async ({ owner, repo }) => {
         try {
             const commitActivityResponse = await fetch(
-                `https://api.github.com/repos/${owner}/${repo}/stats/commit_activity`
+                `https://api.github.com/repos/${owner}/${repo}/stats/commit_activity`,
+                {
+                    headers: {
+                        Authorization: `token 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`,
+                        "X-GitHub-Api-Version": "2022-11-28",
+                    },
+                }
             );
             const codeFrequencyResponse = await fetch(
-                `https://api.github.com/repos/${owner}/${repo}/stats/code_frequency`
+                `https://api.github.com/repos/${owner}/${repo}/stats/code_frequency`,
+                {
+                    headers: {
+                        Authorization: `token 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`,
+                        "X-GitHub-Api-Version": "2022-11-28",
+                    },
+                }
             );
 
             if (!commitActivityResponse.ok || !codeFrequencyResponse.ok) {
                 throw new Error("Failed to fetch repository stats");
             }
 
-            const commitActivityData = await commitActivityResponse.json();
-            const codeFrequencyData = await codeFrequencyResponse.json();
+            let commitActivityData = [];
+            let codeFrequencyData = [];
+
+            if (commitActivityResponse.status === 202) {
+                commitActivityData = [];
+            } else {
+                commitActivityData = await commitActivityResponse.json();
+            }
+
+            if (codeFrequencyResponse.status === 202) {
+                codeFrequencyData = [];
+            } else {
+                codeFrequencyData = await codeFrequencyResponse.json();
+            }
 
             return {
                 commitActivity: commitActivityData,
@@ -32,11 +56,10 @@ export const fetchRepositoryStats = createAsyncThunk(
 const repositoryStatsSlice = createSlice({
     name: "repositoryStats",
     initialState: {
-        stats: null,
+        stats: [],
         loading: false,
         error: null,
     },
-    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchRepositoryStats.pending, (state) => {
