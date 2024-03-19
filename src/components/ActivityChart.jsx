@@ -97,11 +97,11 @@ const ActivityChart = ({ owner, repo }) => {
     };
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <h2 className="text-center my-2">Loading Activity Data...</h2>;
     }
 
     if (error) {
-        return <p>Error: {error}</p>;
+        return <h2 className="text-center my-2">Error: {error}</h2>;
     }
 
     return (

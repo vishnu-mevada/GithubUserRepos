@@ -4,10 +4,9 @@ import config from "../config/config";
 export const fetchRepositoryContributors = createAsyncThunk(
     "repositoryContributors/fetchContributors",
     async ({ owner, repo }) => {
-        console.log(owner, repo, "owner and repos");
         try {
             const response = await fetch(
-                `https://api.github.com/repos/${owner}/${repo}/stats/contributors`,
+                `${config.githubApiUrl}/repos/${owner}/${repo}/stats/contributors`,
                 {
                     headers: {
                         Authorization: `${config.githubToken}`,

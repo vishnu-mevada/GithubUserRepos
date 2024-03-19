@@ -2,8 +2,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import config from "../config/config";
 
-const baseUrl = "https://api.github.com";
-
 export const STATUSES = Object.freeze({
     COMPLETED: "completed",
     ERROR: "error",
@@ -26,7 +24,7 @@ export const fetchGithubRepos = createAsyncThunk(
     async (page, { rejectWithValue }) => {
         try {
             const res = await fetch(
-                `${baseUrl}/search/repositories?q=created:>${lastMonthDate}&sort=stars&order=desc&page=${page}&per_page=10`,
+                `${config.githubApiUrl}/search/repositories?q=created:>${lastMonthDate}&sort=stars&order=desc&page=${page}&per_page=10`,
                 {
                     headers: {
                         Authorization: `${config.githubToken}`,

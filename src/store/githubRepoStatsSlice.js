@@ -6,7 +6,7 @@ export const fetchRepositoryStats = createAsyncThunk(
     async ({ owner, repo }) => {
         try {
             const commitActivityResponse = await fetch(
-                `https://api.github.com/repos/${owner}/${repo}/stats/commit_activity`,
+                `${config.githubApiUrl}/repos/${owner}/${repo}/stats/commit_activity`,
                 {
                     headers: {
                         Authorization: `${config.githubToken}`,
@@ -15,7 +15,7 @@ export const fetchRepositoryStats = createAsyncThunk(
                 }
             );
             const codeFrequencyResponse = await fetch(
-                `https://api.github.com/repos/${owner}/${repo}/stats/code_frequency`,
+                `${config.githubApiUrl}/repos/${owner}/${repo}/stats/code_frequency`,
                 {
                     headers: {
                         Authorization: `token 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`,

@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { STATUSES, fetchGithubRepos } from "../store/githubRepoSlice";
@@ -109,9 +108,13 @@ const ReposList = () => {
                     </AccordionDetails>
                 </Accordion>
             ))}
-            {status === STATUSES?.LOADING && <h1>Loading...</h1>}
+            {status === STATUSES?.LOADING && (
+                <h2 className="text-center my-2">Loading...</h2>
+            )}
             {status === STATUSES?.ERROR && (
-                <h1>There is some internal server Error please try later</h1>
+                <h2 className="text-center my-2">
+                    There is some internal server Error please try later
+                </h2>
             )}
         </>
     );
