@@ -18,7 +18,7 @@ export const fetchRepositoryStats = createAsyncThunk(
                 `${config.githubApiUrl}/repos/${owner}/${repo}/stats/code_frequency`,
                 {
                     headers: {
-                        Authorization: `token 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`,
+                        Authorization: `${config.githubToken}`,
                         "X-GitHub-Api-Version": "2022-11-28",
                     },
                 }
