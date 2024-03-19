@@ -35,7 +35,7 @@ Instructions on how to set up the project locally.
 2. Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/project-name.git
+    git clone https://github.com/vishnu-mevada/GithubUserRepos.git
     ```
 
 3. Navigate to the project directory:
