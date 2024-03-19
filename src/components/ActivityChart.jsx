@@ -18,6 +18,7 @@ const ActivityChart = ({ owner, repo }) => {
         dispatch(fetchRepositoryStats({ owner, repo }));
     }, [dispatch, owner, repo]);
 
+    // Set activity data
     const formatChartData = () => {
         if (stats.length == 0) {
             return {
@@ -89,6 +90,7 @@ const ActivityChart = ({ owner, repo }) => {
         ],
     };
 
+    // Select commits additions deletions
     const handleSeriesToggle = (event) => {
         const value = event.target.value;
         setSelectedSeries(value);
@@ -104,7 +106,7 @@ const ActivityChart = ({ owner, repo }) => {
 
     return (
         <div>
-            <div style={{ display: "flex", justifyContent: "right" }}>
+            <div className="d-flex justify-content-end">
                 <Select value={selectedSeries} onChange={handleSeriesToggle}>
                     <MenuItem value="commits">Commits</MenuItem>
                     <MenuItem value="additions">Additions</MenuItem>

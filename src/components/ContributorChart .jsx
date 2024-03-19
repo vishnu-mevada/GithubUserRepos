@@ -15,6 +15,7 @@ const ContributorChangesChart = ({ owner, repo }) => {
         dispatch(fetchRepositoryContributors({ owner: owner, repo: repo }));
     }, [dispatch, owner, repo]);
 
+    // Set highchart data contributors
     const formatChartData = () => {
         console.log("contributors.length...", contributors.length);
 

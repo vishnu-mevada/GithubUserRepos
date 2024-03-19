@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import config from "../config/config";
 
 const baseUrl = "https://api.github.com";
 
@@ -22,10 +23,16 @@ const lastMonthDate = getLastMonthDate();
 // Fetch Github Repos Action
 export const fetchGithubRepos = createAsyncThunk(
     "fetchGithubRepos",
-    async (page = 1, { rejectWithValue }) => {
+    async (page, { rejectWithValue }) => {
         try {
             const res = await fetch(
-                `${baseUrl}/search/repositories?q=created:>2017-10-22&sort=stars&order=desc&page=${page}&per_page=5`
+                `${baseUrl}/search/repositories?q=created:>${lastMonthDate}&sort=stars&order=desc&page=${page}&per_page=10`,
+                {
+                    headers: {
+                        Authorization: `${config.githubToken}`,
+                        "X-GitHub-Api-Version": "2022-11-28",
+                    },
+                }
             );
             const data = await res.json();
             if (data?.items) {
@@ -43,6 +50,7 @@ export const fetchGithubRepos = createAsyncThunk(
     }
 );
 
+// Github SearchRepositories Slice
 const githubRepoSlice = createSlice({
     name: "githubRepos",
     initialState: {

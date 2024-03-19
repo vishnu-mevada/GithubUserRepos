@@ -6,20 +6,18 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ArrowDropForwardIcon from "@mui/icons-material/ArrowForwardIos";
-import ActivityChart from "./ActivityChart";
-import ContributorChangesChart from "./ContributorChart ";
+import { ActivityChart, ContributorChangesChart } from "./index";
 import "./RepoList.css";
 
 const ReposList = () => {
-    const dispatch = useDispatch();
-
+    const [currentPage, setCurrentPage] = useState(1);
     const [expanded, setExpanded] = useState(null);
+    const dispatch = useDispatch();
+    const statusRef = useRef(null);
 
     const { data: githubRepos, status } = useSelector(
         (state) => state.githubRepos
     );
-    const [currentPage, setCurrentPage] = useState(1);
-    const statusRef = useRef(null);
 
     useEffect(() => {
         statusRef.current = status;
@@ -34,7 +32,7 @@ const ReposList = () => {
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-    }, []);
+    }, [currentPage]);
 
     const handleScroll = () => {
         if (
@@ -47,7 +45,7 @@ const ReposList = () => {
 
     const loadMoreData = async () => {
         dispatch(fetchGithubRepos(currentPage));
-        setCurrentPage((prev) => prev + 1);
+        setCurrentPage((prevPage) => prevPage + 1);
     };
 
     const handleChange = (index) => (event, isExpanded) => {
@@ -74,7 +72,6 @@ const ReposList = () => {
                                 alt=""
                             />{" "}
                             <div>
-                                {index}
                                 <h2>{item.name}</h2>
                                 <p>{item.description}</p>
                                 <div className="d-flex gap-3 align-items-baseline">
