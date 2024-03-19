@@ -1,11 +1,14 @@
 import * as Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import accessibility from "highcharts/modules/accessibility";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRepositoryStats } from "../store/githubRepoStatsSlice";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+
+accessibility(Highcharts);
 
 const ActivityChart = ({ owner, repo }) => {
     const dispatch = useDispatch();
@@ -67,6 +70,10 @@ const ActivityChart = ({ owner, repo }) => {
     const options = {
         chart: {
             type: "line",
+            height: 350,
+        },
+        accessibility: {
+            enabled: false,
         },
         title: {
             text: "Total Changes",

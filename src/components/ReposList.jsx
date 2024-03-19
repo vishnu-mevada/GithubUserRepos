@@ -1,11 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { STATUSES, fetchGithubRepos } from "../store/githubRepoSlice";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ArrowDropForwardIcon from "@mui/icons-material/ArrowForwardIos";
 import { ActivityChart, ContributorChangesChart } from "./index";
+import {
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Grid,
+    Avatar,
+    Typography,
+    Button,
+} from "@mui/material";
+import {
+    ArrowForwardIos as ArrowDropForwardIcon,
+    StarBorder,
+    BugReport,
+} from "@mui/icons-material";
 import "./RepoList.css";
 
 const ReposList = () => {
@@ -64,32 +74,68 @@ const ReposList = () => {
                         aria-controls={`panel-${item.id}-content`}
                         id={`panel-${item.id}-header`}
                     >
-                        <div className="d-flex gap-2">
-                            <img
-                                className="github-img-thumbnail rounded"
-                                src={item.owner.avatar_url}
-                                alt=""
-                            />{" "}
-                            <div>
-                                <h2>{item.name}</h2>
-                                <p>{item.description}</p>
-                                <div className="d-flex gap-3 align-items-baseline">
-                                    <span className="info-btn btn btn-primary">
-                                        {item.stargazers_count}
-                                    </span>
-                                    <span className="info-btn btn btn-primary">
-                                        {item.open_issues_count}
-                                    </span>
-                                    <span>
-                                        Last pushed{" "}
-                                        {new Date(
-                                            item.pushed_at
-                                        ).toLocaleString()}{" "}
-                                        by {item.owner.login}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                        <Grid container spacing={2} alignItems="center">
+                            <Grid item>
+                                <Avatar
+                                    alt={item.owner.login}
+                                    src={item.owner.avatar_url}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm container>
+                                <Grid
+                                    item
+                                    xs
+                                    container
+                                    direction="column"
+                                    spacing={1}
+                                >
+                                    <Grid item>
+                                        <Typography variant="h6">
+                                            {item.name}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography variant="body1">
+                                            {item.description}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid
+                                        item
+                                        container
+                                        spacing={1}
+                                        alignItems="baseline"
+                                    >
+                                        <Grid item>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                startIcon={<StarBorder />}
+                                            >
+                                                {item.stargazers_count}
+                                            </Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                startIcon={<BugReport />}
+                                            >
+                                                {item.open_issues_count}
+                                            </Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Typography variant="body2">
+                                                Last pushed{" "}
+                                                {new Date(
+                                                    item.pushed_at
+                                                ).toLocaleString()}{" "}
+                                                by {item.owner.login}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     </AccordionSummary>
                     <AccordionDetails>
                         {expanded === index && (

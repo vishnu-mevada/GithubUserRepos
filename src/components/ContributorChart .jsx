@@ -17,8 +17,6 @@ const ContributorChangesChart = ({ owner, repo }) => {
 
     // Set highchart data contributors
     const formatChartData = () => {
-        console.log("contributors.length...", contributors.length);
-
         if (contributors === undefined || contributors.length === 0) {
             return {
                 weeks: [],
@@ -59,6 +57,7 @@ const ContributorChangesChart = ({ owner, repo }) => {
     const options = {
         chart: {
             type: "line",
+            height: 350,
         },
         title: {
             text: "Contributor Changes",
